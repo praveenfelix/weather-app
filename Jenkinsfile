@@ -15,13 +15,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'npm test'
+                bat 'npm test'
             }
         }
 
@@ -31,7 +31,7 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('SonarQube-Local') {
-                    sh '${SONAR_SCANNER_HOME}/bin/sonar-scanner'
+                    bat '${SONAR_SCANNER_HOME}/bin/sonar-scanner'
                 }
             }
         }
@@ -48,11 +48,11 @@ pipeline {
             steps {
                 script {
                     // Stop existing container if running
-                    sh 'docker stop weather-app || true'
-                    sh 'docker rm weather-app || true'
+                    bat 'docker stop weather-app || true'
+                    bat 'docker rm weather-app || true'
                     
                     // Run new container
-                    sh "docker run -d --name weather-app -p 3000:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    bat "docker run -d --name weather-app -p 3000:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}"
                 }
             }
         }
