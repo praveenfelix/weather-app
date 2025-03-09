@@ -21,7 +21,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'npm test -- --detectOpenHandles'
+                bat 'npm test -- --detectOpenHandles' // Debug open handles
             }
         }
 
@@ -70,4 +70,4 @@ pipeline {
             echo 'Pipeline failed!'
         }
     }
-} 
+}

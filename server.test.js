@@ -64,19 +64,23 @@ describe('Weather API Endpoints', () => {
 
     // Close the server after tests
     afterAll((done) => {
-        server.close(() => {
-            console.log('Test server closed');
-            done(); // Signal Jest that the server has closed
-        });
+        if (server) {
+            server.close(() => {
+                console.log('Test server closed');
+                done(); // Signal Jest that the server has closed
+            });
+        } else {
+            done(); // If server is not defined, just call done()
+        }
     });
 
     it('GET /api/weather without city parameter should return 400', async () => {
-        const res = await request(app).get('/api/weather');
+        const res = await request(app).get('/api/weather').end();
         expect(res.statusCode).toEqual(400);
     });
 
     it('GET /api/weather with invalid city should return 500', async () => {
-        const res = await request(app).get('/api/weather?city=InvalidCity');
+        const res = await request(app).get('/api/weather?city=InvalidCity').end();
         expect(res.statusCode).toEqual(500);
     });
 });
