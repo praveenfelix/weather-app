@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';  // Set environment to test
+
 const request = require('supertest');
 const app = require('./server'); // Import your Express app
 
@@ -23,8 +25,8 @@ describe('Weather API Endpoints', () => {
         expect(res.status).toBe(400);
     });
 
-    test('GET /api/weather with invalid city should return 500', async () => {
+    test('GET /api/weather with invalid city should return 404', async () => {
         const res = await request(server).get('/api/weather?city=invalid');
-        expect(res.status).toBe(500);
+        expect(res.status).toBe(404);  // Expect 404 for invalid city
     });
 });

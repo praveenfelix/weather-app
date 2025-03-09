@@ -5,32 +5,37 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-//const PORT = process.env.PORT || 3000;
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-
-
-
-
-
-// Example route
-app.get('/api/weather', (req, res) => {
-    if (!req.query.city) {
-        return res.status(400).json({ error: 'City parameter is required' });
+app.get('/api/weather', async (req, res) => {
+    const city = req.query.city;
+    if (!city) {
+        return res.status(400).send({ error: 'City parameter is required' });
     }
-    // Simulate a weather API response
-    res.status(200).json({ city: req.query.city, temperature: 25 });
+
+    try {
+        const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`);
+        res.status(200).send(response.data);
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            res.status(404).send({ error: 'City not found' });
+        } else {
+            res.status(500).send({ error: 'Internal server error' });
+        }
+    }
 });
 
-// Start the server
-const server = app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// Start the server only if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+    const server = app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
 
-// Export the server for testing
-module.exports = server;
+// Export the app for testing
+module.exports = app;
