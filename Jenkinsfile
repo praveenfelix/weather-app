@@ -21,7 +21,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'npm test -- --detectOpenHandles' // Debug open handles
+                bat 'npm test -- --forceExit' // Force Jest to exit
             }
         }
 
