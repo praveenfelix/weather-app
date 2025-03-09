@@ -32,7 +32,8 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('SonarQube-Local') {
-                    bat '${SONAR_SCANNER_HOME}/bin/sonar-scanner'
+                    bat 'echo %SONAR_SCANNER_HOME%' // Debugging: Print the path
+                    bat '%SONAR_SCANNER_HOME%\\bin\\sonar-scanner'
                 }
             }
         }
